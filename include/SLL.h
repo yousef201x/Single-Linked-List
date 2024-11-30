@@ -48,6 +48,29 @@ public:
         this->head->next = temp;
     }
 
+
+    /*
+     * pop_front()
+     * Removes the element at the front of the singly linked list.
+     * This function modifies the head pointer to point to the next node,
+     * and deletes the previous head node to free memory.
+     */
+    void pop_front() {
+        // Case 1: List is empty, no element to remove
+        if (this->empty()) {
+            return; // Return early if the list is empty
+        }
+
+        // Case 2: List has elements
+        // Temporarily hold the current head node
+        Node<Ty>* temp = this->head;
+
+        // Update the head pointer to the next node in the list
+        this->head = temp->next;
+
+        // Free the memory used by the old head node
+        delete temp;
+    }
 };
 
 #endif // INC_1_SINGLE_LINKED_LIST_SLL_H
