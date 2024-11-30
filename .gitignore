@@ -1,0 +1,7 @@
+# ignore any build files or folders
+.idea/
+cmake-build-debug/
+cmake-build-release/
+*.iml
+# Ignores any CMake build directories
+cmake-build-*/  
