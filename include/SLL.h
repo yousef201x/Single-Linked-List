@@ -10,10 +10,11 @@ class SLL : public Node<Ty> {
 protected:
     // Pointer to the first element of the SLL
     Node<Ty>* head;
+    int _size{};
 
 public:
     // Default constructor: Initializes an empty list
-    SLL() : head(nullptr) {}
+    SLL() : head(nullptr) , _size(0) {}
 
     /*
      * empty()
@@ -24,6 +25,14 @@ public:
         return this->head == nullptr;
     }
 
+    /*
+     * size()
+     * @return the size of the singly linked list.
+     */
+
+    int size(){
+        return this->_size;
+    }
 
     /*
      * push_front()
@@ -33,7 +42,11 @@ public:
     void push_front(Ty value) {
         // Case 1: List is empty
         if (this->empty()) {
-            this->head = new Node<Ty>(value, nullptr); // Create the first node
+            // Create the first node
+            this->head = new Node<Ty>(value, nullptr);
+
+            // increase the size by one
+            this->_size += 1;
             return;
         }
 
@@ -46,6 +59,10 @@ public:
 
         // Link the new head node to the previously stored node
         this->head->next = temp;
+
+        // increase the size by one
+        this->_size += 1;
+
     }
 
 
@@ -70,6 +87,9 @@ public:
 
         // Free the memory used by the old head node
         delete temp;
+
+        // decrease the size by one
+        this->_size -= 1;
     }
 
     /*
@@ -82,6 +102,8 @@ public:
         // Check if the singly linked list is empty
         if (this->empty()) {
             this->push_front(value); // If empty, use push_front to add the first element
+            // increase the size by one
+            this->_size += 1;
             return;
         }
 
@@ -95,7 +117,15 @@ public:
 
         // Create a new node at the end of the list
         itr->next = new Node<Ty>(value, nullptr);
+
+        // increase the size by one
+        this->_size += 1;
     }
+
+    /*
+     * pop_back()
+     * Removes the element at the end of the singly linked list.
+     */
 
     void pop_back() {
         // Case 1: The list is empty
@@ -106,6 +136,8 @@ public:
         // Case 2: The list has only one node
         if (this->head->next == nullptr) {
             this->pop_front();
+            // decrease the size by one
+            this->_size -= 1;
             return;
         }
 
@@ -122,8 +154,82 @@ public:
 
         // Set the next pointer of the second-to-last node to nullptr
         itr->next = nullptr;
+
+        // decrease the size by one
+        this->_size -= 1;
     }
 
+    void push_at(Ty value , int index){
+        // Case 1: Invalid index
+        if (index < 0) {
+            throw std::out_of_range("Index cannot be negative value.");
+        }
+
+        // Case 2: Handle empty list
+        if (this->empty() && index != 0) {
+            throw std::out_of_range("Index is out of bounds for an empty list");
+        }
+
+        // Case 3: If the index is 0, insert at the front
+        if (index == 0) {
+            this->push_front(value);
+            return;
+        }
+
+        Node<Ty>* itr = head;
+        for(int i = 0 ; i < index - 1  ; i++){
+            if (itr->next == nullptr) {
+                throw std::out_of_range("Index is out of bounds");
+            }
+            itr = itr->next;
+        }
+
+        // Insert at the specified position
+        Node<Ty>* new_node = new Node<Ty>(value, itr->next);
+        itr->next = new_node;
+
+        this->_size += 1;
+    }
+
+    void pop_at(int index) {
+        // Case 1: Invalid index (out of bounds)
+        if (index < 0 || index >= this->size()) {
+            throw std::out_of_range("Index is out of bounds");
+        }
+
+        // Case 2: List is empty, nothing to remove
+        if (this->empty()) {
+            return;
+        }
+
+        // Case 3: Removing the first element
+        if (index == 0) {
+            pop_front();
+            return;
+        }
+
+        // Case 4: Removing the last element
+        if (index == this->size() - 1) {
+            pop_back();
+            return;
+        }
+
+        // Case 5: Removing an element from the middle
+        Node<Ty>* itr = this->head;
+
+        // Iterate to the node before the one we want to remove
+        for (int i = 0; i < index - 1; ++i) {
+            itr = itr->next;  // move to the next node
+        }
+
+        // itr is now the node before the one to remove
+        Node<Ty>* temp = itr->next;  // the node to remove
+        itr->next = itr->next->next;  // bypass the node to remove
+
+        delete temp;  // deallocate the memory for the node
+
+        this->_size -= 1; // decrease the size by one
+    }
 
 };
 
