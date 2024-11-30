@@ -16,6 +16,54 @@ public:
     // Default constructor: Initializes an empty list
     SLL() : head(nullptr) , _size(0) {}
 
+    // Copy constructor
+    SLL(const SLL& right) {
+        // Check if the list is empty
+        if (right.head == nullptr) {
+            this->head = nullptr;
+            return;
+        }
+
+        // Create the head node
+        this->head = new Node<Ty>(right.head->value);
+        Node<Ty>* itr = this->head; // Pointer to traverse the new list
+
+        // Traverse the original list and copy each node
+        Node<Ty>* rhs_itr = right.head->next; // Pointer to traverse the original list
+        while (rhs_itr != nullptr) {
+            itr->next = new Node<Ty>(rhs_itr->value);  // Create a new node for each value
+            itr = itr->next;  // Move to the next node
+            rhs_itr = rhs_itr->next;  // Move to the next node in the original list
+        }
+    }
+
+    // [] operator overloading
+    Ty& operator[] (int index) {
+        // Check if index is valid
+        if (index < 0) {
+            throw std::out_of_range("Index cannot be negative");
+        }
+
+        Node<Ty>* itr = head;
+        for (int i = 0; i < index; ++i) {
+            if (itr == nullptr) {
+                throw std::out_of_range("Index is out of bounds");
+            }
+            itr = itr->next;
+        }
+
+        return itr->value;
+    }
+
+    // Assignment operator overloading
+    SLL& operator=(SLL right) {
+        // Step 1: Swap the contents of the current object with the right-hand side copy
+        std::swap(this->head, right.head);
+
+        // Step 2: Return *this to allow chaining
+        return *this;
+    }
+
     /*
      * empty()
      * Checks whether the singly linked list is empty.
@@ -229,6 +277,16 @@ public:
         delete temp;  // deallocate the memory for the node
 
         this->_size -= 1; // decrease the size by one
+    }
+
+    ~SLL() {
+        // Start from the head and traverse the list
+        Node<Ty>* itr = this->head;
+        while (itr != nullptr) {
+            Node<Ty>* temp = itr; // Save the current node
+            itr = itr->next; // Move to the next node
+            delete temp; // Delete the current node
+        }
     }
 
 };
