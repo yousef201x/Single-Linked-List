@@ -12,7 +12,6 @@ protected:
     Ty value ;
     Ty* next ;
 public:
-    Node(Ty value) : value(value) , next(nullptr){}
     Node(Ty value , Ty* next) : value(value) , next(next) {}
 };
 
