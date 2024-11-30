@@ -8,11 +8,12 @@
 template <typename Ty>
 
 class Node{
-protected:
-    Ty value ;
-    Ty* next ;
 public:
-    Node(Ty value , Ty* next) : value(value) , next(next) {}
+    Ty value ;
+    Node* next ;
+
+    Node() : value(Ty{}), next(nullptr) {}
+    Node(Ty value , Node* next = nullptr) : value(value) , next(next){}
 };
 
 #endif //INC_1_SINGLE_LINKED_LIST_NODE_H
