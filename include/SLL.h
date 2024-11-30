@@ -13,7 +13,7 @@ protected:
 
 public:
     // Default constructor: Initializes an empty list
-    SLL() {}
+    SLL() : head(nullptr) {}
 
     /*
      * empty()
@@ -30,7 +30,7 @@ public:
      * Inserts a new element at the front of the singly linked list.
      * @param value: The value to be inserted in the new node.
      */
-    void push_front(Ty& value) {
+    void push_front(Ty value) {
         // Case 1: List is empty
         if (this->empty()) {
             this->head = new Node<Ty>(value, nullptr); // Create the first node
@@ -71,6 +71,60 @@ public:
         // Free the memory used by the old head node
         delete temp;
     }
+
+    /*
+     * push_back()
+     * Inserts a new element at the end of the singly linked list.
+     * @param value: The value to be inserted in the new node.
+     */
+
+    void push_back(Ty value) {
+        // Check if the singly linked list is empty
+        if (this->empty()) {
+            this->push_front(value); // If empty, use push_front to add the first element
+            return;
+        }
+
+        // Pointer to iterate through the list
+        Node<Ty>* itr = this->head;
+
+        // Traverse the list until the last node
+        while (itr->next != nullptr) {
+            itr = itr->next; // Move to the next node
+        }
+
+        // Create a new node at the end of the list
+        itr->next = new Node<Ty>(value, nullptr);
+    }
+
+    void pop_back() {
+        // Case 1: The list is empty
+        if (this->empty()) {
+            return; // Nothing to remove
+        }
+
+        // Case 2: The list has only one node
+        if (this->head->next == nullptr) {
+            this->pop_front();
+            return;
+        }
+
+        // Case 3: The list has more than one node
+        Node<Ty>* itr = this->head;
+
+        // Traverse the list to find the second-to-last node
+        while (itr->next->next != nullptr) {
+            itr = itr->next;
+        }
+
+        // Delete the last node
+        delete itr->next;
+
+        // Set the next pointer of the second-to-last node to nullptr
+        itr->next = nullptr;
+    }
+
+
 };
 
 #endif // INC_1_SINGLE_LINKED_LIST_SLL_H
